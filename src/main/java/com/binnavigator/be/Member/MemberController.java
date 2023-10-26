@@ -10,19 +10,20 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/user")
 public class MemberController {
     private final MemberService memberService;
-    @PostMapping("/user/add")
+    @PostMapping("/add")
     public ResponseEntity<Boolean> add(@RequestBody AddRequest addRequest) {
         return ResponseEntity.ok(memberService.add(addRequest));
     }
 
-    @PostMapping("/user/login")
+    @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(memberService.login(loginRequest));
     }
 
-    @DeleteMapping("/user/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<Boolean> delete(@RequestParam Long userId) {
         return ResponseEntity.ok(memberService.delete(userId));
     }

@@ -17,8 +17,8 @@ public class BinController {
     private final BinService binService;
 
     @PostMapping("/add")
-    public void add(@RequestBody BinAddRequest binAddRequest) {
-        binService.add(binAddRequest);
+    public ResponseEntity<Long> add(@RequestBody BinAddRequest binAddRequest) {
+        return ResponseEntity.ok(binService.add(binAddRequest));
     }
 
     @PostMapping("/delete")
@@ -41,8 +41,13 @@ public class BinController {
         return ResponseEntity.ok(binService.getAll());
     }
 
-    @GetMapping("/get")
+    @GetMapping("/get-by-user")
     public ResponseEntity<List<GetResponse>> getByUserId(@RequestParam long userId) {
         return ResponseEntity.ok(binService.getByUserId(userId));
+    }
+
+    @GetMapping("/get-by-bin")
+    public ResponseEntity<GetResponse> getByBinId(@RequestParam long binId) {
+        return ResponseEntity.ok(binService.getByBinId(binId));
     }
 }

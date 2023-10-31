@@ -20,7 +20,7 @@ public class BinService {
     private final BinRepository binRepository;
     private final MemberRepository memberRepository;
 
-    public void add(BinAddRequest binAddRequest) {
+    public Long add(BinAddRequest binAddRequest) {
         Member owner = memberRepository.findById(binAddRequest.getUserId()).orElseThrow();
         Bin newBin = Bin.builder()
                 .owner(owner)
@@ -29,7 +29,7 @@ public class BinService {
                 .longitude(binAddRequest.getLongitude())
                 .reported(0)
                 .build();
-        binRepository.save(newBin);
+        return binRepository.save(newBin).getId();
     }
 
     public boolean delete(BinDeleteRequest binDeleteRequest) {
@@ -84,5 +84,15 @@ public class BinService {
             }
         }
         return getResponseList;
+    }
+
+    public GetResponse getByBinId(long binId) {
+        Bin findBin = binRepository.findById(binId).orElseThrow();
+        return GetResponse.builder()
+                .binId(findBin.getId())
+                .latitude(findBin.getLatitude())
+                .longitude(findBin.getLongitude())
+                .information(findBin.getInformation())
+                .build();
     }
 }

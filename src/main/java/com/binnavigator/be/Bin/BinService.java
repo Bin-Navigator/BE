@@ -7,6 +7,7 @@ import com.binnavigator.be.Bin.Data.GetResponse;
 import com.binnavigator.be.Member.Member;
 import com.binnavigator.be.Member.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ public class BinService {
                 .latitude(binAddRequest.getLatitude())
                 .longitude(binAddRequest.getLongitude())
                 .reported(0)
+                .isFull(false)
                 .build();
         return binRepository.save(newBin).getId();
     }
@@ -58,12 +60,7 @@ public class BinService {
         List<GetResponse> getResponseList = new ArrayList<>();
         List<Bin> all = binRepository.findAll();
         for(Bin bin : all) {
-            GetResponse getResponse = GetResponse.builder()
-                    .binId(bin.getId())
-                    .latitude(bin.getLatitude())
-                    .longitude(bin.getLongitude())
-                    .information(bin.getInformation())
-                    .build();
+            GetResponse getResponse = buildGetResponse(bin);
             getResponseList.add(getResponse);
         }
         return getResponseList;
@@ -74,12 +71,7 @@ public class BinService {
         List<Bin> all = binRepository.findAll();
         for(Bin bin : all) {
             if(bin.getOwner().getId() == userId) {
-                GetResponse getResponse = GetResponse.builder()
-                        .binId(bin.getId())
-                        .latitude(bin.getLatitude())
-                        .longitude(bin.getLongitude())
-                        .information(bin.getInformation())
-                        .build();
+                GetResponse getResponse = buildGetResponse(bin);
                 getResponseList.add(getResponse);
             }
         }
@@ -88,11 +80,28 @@ public class BinService {
 
     public GetResponse getByBinId(long binId) {
         Bin findBin = binRepository.findById(binId).orElseThrow();
+        return buildGetResponse(findBin);
+    }
+
+    public GetResponse full(long binId) {
+        Bin findBin = binRepository.findById(binId).orElseThrow();
+        findBin.changeIsFull();
+        binRepository.save(findBin);
+        return buildGetResponse(findBin);
+    }
+
+    public GetResponse buildGetResponse(Bin bin) {
         return GetResponse.builder()
-                .binId(findBin.getId())
-                .latitude(findBin.getLatitude())
-                .longitude(findBin.getLongitude())
-                .information(findBin.getInformation())
+                .binId(bin.getId())
+                .latitude(bin.getLatitude())
+                .longitude(bin.getLongitude())
+                .information(bin.getInformation())
+                .isFull(bin.isFull())
                 .build();
+    }
+
+    @Scheduled(cron = "0 0 6 * * ?", zone = "Asia/Seoul")
+    public void setAllIsFullFalse() {
+        binRepository.setAllIsFullFalse();
     }
 }

@@ -10,4 +10,5 @@ public class GetResponse {
     private float latitude;
     private float longitude;
     private String information;
+    private boolean isFull;
 }

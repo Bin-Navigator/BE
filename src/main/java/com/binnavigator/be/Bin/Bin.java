@@ -24,15 +24,19 @@ public class Bin {
 
     private int reported = 0;
 
+    @Column(nullable = false)
+    private boolean isFull;
+
     @ManyToOne
     private Member owner;
 
     @Builder
-    public Bin(float latitude, float longitude, String information, int reported, Member owner) {
+    public Bin(float latitude, float longitude, String information, int reported, Member owner, boolean isFull) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.information = information;
         this.reported = reported;
+        this.isFull = isFull;
         this.owner = owner;
     }
 
@@ -42,5 +46,9 @@ public class Bin {
 
     public boolean haveToDeleted() {
         return this.reported >= 5;
+    }
+
+    public void changeIsFull() {
+        isFull = !this.isFull;
     }
 }

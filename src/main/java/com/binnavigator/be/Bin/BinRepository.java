@@ -11,4 +11,8 @@ public interface BinRepository extends JpaRepository<Bin, Long> {
     @Modifying
     @Query("UPDATE Bin b SET b.information = :newInformation WHERE b.id = :binId")
     void updateInformation(@Param("binId") Long binId, @Param("newInformation") String newInformation);
+
+    @Modifying
+    @Query("UPDATE Bin b SET b.isFull = FALSE")
+    void setAllIsFullFalse();
 }

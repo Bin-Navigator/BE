@@ -21,7 +21,7 @@ public class BinController {
         return ResponseEntity.ok(binService.add(binAddRequest));
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<Boolean> delete(@RequestBody BinDeleteRequest binDeleteRequest) {
         return ResponseEntity.ok(binService.delete(binDeleteRequest));
     }
@@ -49,5 +49,10 @@ public class BinController {
     @GetMapping("/get-by-bin")
     public ResponseEntity<GetResponse> getByBinId(@RequestParam long binId) {
         return ResponseEntity.ok(binService.getByBinId(binId));
+    }
+
+    @PutMapping("/full")
+    public ResponseEntity<GetResponse> full(@RequestParam long binId) {
+        return ResponseEntity.ok(binService.full(binId));
     }
 }

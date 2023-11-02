@@ -1,9 +1,6 @@
 package com.binnavigator.be.Bin;
 
-import com.binnavigator.be.Bin.Data.BinAddRequest;
-import com.binnavigator.be.Bin.Data.BinUpdateRequest;
-import com.binnavigator.be.Bin.Data.BinDeleteRequest;
-import com.binnavigator.be.Bin.Data.GetResponse;
+import com.binnavigator.be.Bin.Data.*;
 import com.binnavigator.be.Member.Member;
 import com.binnavigator.be.Member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +25,7 @@ public class BinService {
                 .information(binAddRequest.getInformation())
                 .latitude(binAddRequest.getLatitude())
                 .longitude(binAddRequest.getLongitude())
+                .image(binAddRequest.getImage())
                 .reported(0)
                 .isFull(false)
                 .build();
@@ -78,9 +76,15 @@ public class BinService {
         return getResponseList;
     }
 
-    public GetResponse getByBinId(long binId) {
+    public GetByBinResponse getByBinId(long binId) {
         Bin findBin = binRepository.findById(binId).orElseThrow();
-        return buildGetResponse(findBin);
+        return GetByBinResponse.builder()
+                .binId(findBin.getId())
+                .latitude(findBin.getLatitude())
+                .longitude(findBin.getLongitude())
+                .information(findBin.getInformation())
+                .image(findBin.getImage())
+                .build();
     }
 
     public GetResponse full(long binId) {

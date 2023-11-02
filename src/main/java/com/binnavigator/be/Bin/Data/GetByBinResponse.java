@@ -1,12 +1,15 @@
 package com.binnavigator.be.Bin.Data;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class BinAddRequest {
+@Builder
+public class GetByBinResponse {
+    private long binId;
     private float latitude;
     private float longitude;
     private String information;
     private String image;
-    private long userId;
+    private boolean isFull;
 }

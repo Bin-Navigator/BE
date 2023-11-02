@@ -1,9 +1,6 @@
 package com.binnavigator.be.Bin;
 
-import com.binnavigator.be.Bin.Data.BinAddRequest;
-import com.binnavigator.be.Bin.Data.BinUpdateRequest;
-import com.binnavigator.be.Bin.Data.BinDeleteRequest;
-import com.binnavigator.be.Bin.Data.GetResponse;
+import com.binnavigator.be.Bin.Data.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +44,7 @@ public class BinController {
     }
 
     @GetMapping("/get-by-bin")
-    public ResponseEntity<GetResponse> getByBinId(@RequestParam long binId) {
+    public ResponseEntity<GetByBinResponse> getByBinId(@RequestParam long binId) {
         return ResponseEntity.ok(binService.getByBinId(binId));
     }
 

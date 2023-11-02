@@ -22,6 +22,8 @@ public class Bin {
 
     private String information;
 
+    private String image;
+
     private int reported = 0;
 
     @Column(nullable = false)
@@ -31,10 +33,11 @@ public class Bin {
     private Member owner;
 
     @Builder
-    public Bin(float latitude, float longitude, String information, int reported, Member owner, boolean isFull) {
+    public Bin(float latitude, float longitude, String information, String image, int reported, Member owner, boolean isFull) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.information = information;
+        this.image = image;
         this.reported = reported;
         this.isFull = isFull;
         this.owner = owner;

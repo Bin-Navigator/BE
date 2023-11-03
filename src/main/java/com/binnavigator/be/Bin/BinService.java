@@ -7,9 +7,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.apache.commons.codec.binary.Base64;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -20,12 +28,23 @@ public class BinService {
 
     public Long add(BinAddRequest binAddRequest) {
         Member owner = memberRepository.findById(binAddRequest.getUserId()).orElseThrow();
+        byte[] imageBytes = Base64.decodeBase64(binAddRequest.getImage());
+        UUID imageUuid = UUID.randomUUID();
+        try {
+            ByteArrayInputStream bis = new ByteArrayInputStream(imageBytes);
+            BufferedImage bufferedImage = ImageIO.read(bis);
+            String userHome = System.getProperty("user.home");
+            File outputFile = new File(userHome + File.separator + "images" + File.separator + imageUuid + ".jpg");
+            ImageIO.write(bufferedImage, "jpg", outputFile);
+        } catch (IOException e) {
+            throw new RuntimeException("Error uploading image", e);
+        }
         Bin newBin = Bin.builder()
                 .owner(owner)
                 .information(binAddRequest.getInformation())
                 .latitude(binAddRequest.getLatitude())
                 .longitude(binAddRequest.getLongitude())
-                .image(binAddRequest.getImage())
+                .image(imageUuid)
                 .reported(0)
                 .isFull(false)
                 .build();
@@ -78,12 +97,15 @@ public class BinService {
 
     public GetByBinResponse getByBinId(long binId) {
         Bin findBin = binRepository.findById(binId).orElseThrow();
+        String userHome = System.getProperty("user.home");
+        String imagePath = userHome + File.separator + "images" + File.separator + findBin.getImage() + ".jpg";
+        String base64Image = getImageAsBase64(imagePath);
         return GetByBinResponse.builder()
                 .binId(findBin.getId())
                 .latitude(findBin.getLatitude())
                 .longitude(findBin.getLongitude())
                 .information(findBin.getInformation())
-                .image(findBin.getImage())
+                .image(base64Image)
                 .build();
     }
 
@@ -102,6 +124,15 @@ public class BinService {
                 .information(bin.getInformation())
                 .isFull(bin.isFull())
                 .build();
+    }
+
+    public String getImageAsBase64(String imagePath) {
+        try{
+            byte[] imageBytes = Files.readAllBytes(new File(imagePath).toPath());
+            return Base64.encodeBase64String(imageBytes);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot find Image");
+        }
     }
 
     @Scheduled(cron = "0 0 6 * * ?", zone = "Asia/Seoul")

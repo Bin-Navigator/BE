@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 
 @Entity
 @Getter
@@ -23,8 +25,7 @@ public class Bin {
 
     private String information;
 
-    @Column(length = 8000)
-    private String image;
+    private UUID image;
 
     private int reported = 0;
 
@@ -35,7 +36,7 @@ public class Bin {
     private Member owner;
 
     @Builder
-    public Bin(float latitude, float longitude, String information, String image, int reported, Member owner, boolean isFull) {
+    public Bin(float latitude, float longitude, String information, UUID image, int reported, Member owner, boolean isFull) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.information = information;

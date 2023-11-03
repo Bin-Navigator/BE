@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -22,6 +23,7 @@ public class Bin {
 
     private String information;
 
+    @Column(length = 8000)
     private String image;
 
     private int reported = 0;

@@ -44,6 +44,7 @@ public class Bin {
         this.reported = reported;
         this.isFull = isFull;
         this.owner = owner;
+        owner.addBin(this);
     }
 
     public void reported() {

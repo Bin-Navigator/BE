@@ -1,8 +1,6 @@
 package com.binnavigator.be.Member;
 
-import com.binnavigator.be.Member.Data.AddRequest;
-import com.binnavigator.be.Member.Data.LoginRequest;
-import com.binnavigator.be.Member.Data.LoginResponse;
+import com.binnavigator.be.Member.Data.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +16,11 @@ public class MemberController {
         return ResponseEntity.ok(memberService.add(addRequest));
     }
 
+    @GetMapping("/get")
+    public ResponseEntity<UserGetResponse> get(@RequestParam Long userId) {
+        return ResponseEntity.ok(memberService.get(userId));
+    }
+
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(memberService.login(loginRequest));
@@ -26,5 +29,10 @@ public class MemberController {
     @DeleteMapping("/delete")
     public ResponseEntity<Boolean> delete(@RequestParam Long userId) {
         return ResponseEntity.ok(memberService.delete(userId));
+    }
+
+    @PutMapping("/distance")
+    public ResponseEntity<Integer> distance(@RequestBody DistanceRequest distanceRequest) {
+        return ResponseEntity.ok(memberService.distance(distanceRequest));
     }
 }

@@ -45,8 +45,7 @@ public class BinService {
                 .latitude(binAddRequest.getLatitude())
                 .longitude(binAddRequest.getLongitude())
                 .image(imageUuid)
-                .reported(0)
-                .isFull(false)
+                .type(binAddRequest.getType())
                 .build();
         return binRepository.save(newBin).getId();
     }
@@ -106,6 +105,9 @@ public class BinService {
                 .longitude(findBin.getLongitude())
                 .information(findBin.getInformation())
                 .image(base64Image)
+                .full(findBin.isFull())
+                .type(findBin.getType())
+                .userId(findBin.getOwner().getId())
                 .build();
     }
 
@@ -122,7 +124,9 @@ public class BinService {
                 .latitude(bin.getLatitude())
                 .longitude(bin.getLongitude())
                 .information(bin.getInformation())
-                .isFull(bin.isFull())
+                .full(bin.isFull())
+                .type(bin.getType())
+                .userId(bin.getOwner().getId())
                 .build();
     }
 

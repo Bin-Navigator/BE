@@ -29,20 +29,23 @@ public class Bin {
 
     private int reported = 0;
 
+    private BinType type;
+
     @Column(nullable = false)
-    private boolean isFull;
+    private boolean full;
 
     @ManyToOne
     private Member owner;
 
     @Builder
-    public Bin(float latitude, float longitude, String information, UUID image, int reported, Member owner, boolean isFull) {
+    public Bin(float latitude, float longitude, String information, UUID image, Member owner,BinType type) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.information = information;
         this.image = image;
-        this.reported = reported;
-        this.isFull = isFull;
+        this.reported = 0;
+        this.type = type;
+        this.full = false;
         this.owner = owner;
         owner.addBin(this);
     }
@@ -56,6 +59,6 @@ public class Bin {
     }
 
     public void changeIsFull() {
-        isFull = !this.isFull;
+        full = !this.full;
     }
 }

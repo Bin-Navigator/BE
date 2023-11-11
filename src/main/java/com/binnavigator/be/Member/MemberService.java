@@ -1,13 +1,9 @@
 package com.binnavigator.be.Member;
 
-import com.binnavigator.be.Member.Data.AddRequest;
-import com.binnavigator.be.Member.Data.LoginRequest;
-import com.binnavigator.be.Member.Data.LoginResponse;
+import com.binnavigator.be.Member.Data.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 
 @Service
 @Transactional
@@ -33,8 +29,7 @@ public class MemberService {
         Member newMember = Member.builder()
                 .username(addRequest.getUsername())
                 .password(addRequest.getPassword())
-                .reported(0)
-                .binList(new ArrayList<>())
+                .email(addRequest.getEmail())
                 .build();
         memberRepository.save(newMember);
         return true;
@@ -44,5 +39,20 @@ public class MemberService {
         Member deletedMember = memberRepository.findById(userId).orElseThrow();
         memberRepository.delete(deletedMember);
         return true;
+    }
+
+    public Integer distance(DistanceRequest distanceRequest) {
+        Member member = memberRepository.findById(distanceRequest.getUserId()).orElseThrow();
+        int distance = member.addDistance(distanceRequest.getDistance());
+        memberRepository.save(member);
+        return distance;
+    }
+
+    public UserGetResponse get(Long userId) {
+        Member member = memberRepository.findById(userId).orElseThrow();
+        return UserGetResponse.builder()
+                .numOfBins(member.getBinList().size())
+                .distance(member.getDistance())
+                .build();
     }
 }

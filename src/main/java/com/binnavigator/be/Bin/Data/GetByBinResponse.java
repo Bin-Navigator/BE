@@ -1,5 +1,6 @@
 package com.binnavigator.be.Bin.Data;
 
+import com.binnavigator.be.Bin.BinType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,5 +12,7 @@ public class GetByBinResponse {
     private float longitude;
     private String information;
     private String image;
-    private boolean isFull;
+    private boolean full;
+    private BinType type;
+    private long userId;
 }

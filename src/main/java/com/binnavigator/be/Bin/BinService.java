@@ -53,6 +53,7 @@ public class BinService {
     public boolean delete(BinDeleteRequest binDeleteRequest) {
         Bin deleteBin = binRepository.findById(binDeleteRequest.getBinId()).orElseThrow();
         if(deleteBin.getOwner().getId() == binDeleteRequest.getUserId()) {
+            deleteBin.getOwner().deleteBin(deleteBin);
             binRepository.delete(deleteBin);
             return true;
         } else

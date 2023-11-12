@@ -44,6 +44,10 @@ public class Member {
         this.binList.add(bin);
     }
 
+    public void deleteBin(Bin bin) {
+        this.binList.remove(bin);
+    }
+
     public int addDistance(int distance) {
         return this.distance += distance;
     }

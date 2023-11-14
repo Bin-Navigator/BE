@@ -13,6 +13,7 @@ public class MemberController {
     private final MemberService memberService;
     @PostMapping("/add")
     public ResponseEntity<Boolean> add(@RequestBody AddRequest addRequest) {
+
         return ResponseEntity.ok(memberService.add(addRequest));
     }
 

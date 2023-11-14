@@ -1,6 +1,7 @@
 package com.binnavigator.be.Bin;
 
 import com.binnavigator.be.Bin.Data.*;
+import com.binnavigator.be.Mail.MailService;
 import com.binnavigator.be.Member.Member;
 import com.binnavigator.be.Member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import java.util.UUID;
 public class BinService {
     private final BinRepository binRepository;
     private final MemberRepository memberRepository;
+    private final MailService mailService;
 
     public Long add(BinAddRequest binAddRequest) {
         Member owner = memberRepository.findById(binAddRequest.getUserId()).orElseThrow();
@@ -47,6 +49,9 @@ public class BinService {
                 .image(imageUuid)
                 .type(binAddRequest.getType())
                 .build();
+        if(newBin.getOwner().getBinList().size() == 10){
+            mailService.mailSend(newBin.getOwner());
+        }
         return binRepository.save(newBin).getId();
     }
 

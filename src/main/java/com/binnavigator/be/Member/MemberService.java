@@ -1,5 +1,6 @@
 package com.binnavigator.be.Member;
 
+import com.binnavigator.be.Mail.MailService;
 import com.binnavigator.be.Member.Data.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-
+    private final MailService mailService;
     public LoginResponse login(LoginRequest loginRequest) {
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
@@ -44,7 +45,11 @@ public class MemberService {
 
     public Integer distance(DistanceRequest distanceRequest) {
         Member member = memberRepository.findById(distanceRequest.getUserId()).orElseThrow();
-        int distance = member.addDistance(distanceRequest.getDistance());
+        int distance = member.addDistance((distanceRequest.getDistance()/10)*10);
+        if(distance >= 1000 && distance % 10 == 0){
+            member.addDistance(1);
+            mailService.mailSendDistance(member);
+        }
         memberRepository.save(member);
         return distance;
     }

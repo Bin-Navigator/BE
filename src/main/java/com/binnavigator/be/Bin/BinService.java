@@ -50,7 +50,7 @@ public class BinService {
                 .type(binAddRequest.getType())
                 .build();
         if(newBin.getOwner().getBinList().size() == 10){
-            mailService.mailSend(newBin.getOwner());
+            mailService.mailSendAddBin(newBin.getOwner());
         }
         return binRepository.save(newBin).getId();
     }
